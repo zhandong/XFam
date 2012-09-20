@@ -269,10 +269,10 @@ lambdaMax <-function(X){
 # X is pxn matrix
 # nlams is the # of lambda
 # parallel the algorithm if set T
-WPGM.network = function(X,R,nlams,lams=NULL, parallel=T,ncores=4){
+WPGM.network = function(X,R,nlams,lmin=0.001,lams=NULL, parallel=T,ncores=4){
 	  if(is.null(lams)){
 	  	 lmax = lambdaMax(t(X))
-		 lams = exp(seq(log(lmax),log(.0001),l=nlams));	
+		 lams = exp(seq(log(lmax),log(lmin),l=nlams));	
 	  }
 	 
 	  ghat = c()
@@ -1686,16 +1686,27 @@ LLGM.select <- function(X,method="star",N=100,beta=0.05, lambda.path=NULL,nlams=
 	
 }
 
-
-
-
-
-LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, nlams=20, lambda.path=NULL ,parallel=T,nCpus=4){
+LPGM.network <-function(X,lmin = 0.01,lambda.path=NULL, nlams =20,parallel =T, nCpus = 10){
 	
 	if(is.null(lambda.path) ){
 		#lmax = lambdaMax(t(X))
 		lmax = myglmnet.max(X)
- 		lambda.path = exp(seq(log(lmax),log(.001),l=nlams));
+ 		lambda.path = exp(seq(log(lmax),log(lmin),l=nlams));
+	}
+		
+	ghat = glmpois(X,lambda=lambda.path,parallel=T,nCpus=nCpus)
+	ghat =lapply(1:nlams,function(r){return(ghat[,,r])})
+	
+	return(ghat)
+}
+
+
+LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01, nlams=20, lambda.path=NULL ,parallel=T,nCpus=4){
+	
+	if(is.null(lambda.path) ){
+		#lmax = lambdaMax(t(X))
+		lmax = myglmnet.max(X)
+ 		lambda.path = exp(seq(log(lmax),log(lmin),l=nlams));
 	}
 	
 	if(method=="star" & link=="log" & parallel == T){
@@ -1790,6 +1801,14 @@ myglasso.select <- function(X,method="star",beta=0.05, nlams,N=100){
 	lout.select = huge.select(lout,criterion="stars",stars.thresh= beta,rep.num = N)
 	
 	return(lout.select)
+}
+
+### X is a pxn matrix
+myglasso<- function(X,method="star",beta=0.05, nlams,N=100){
+	X=t(X)	
+	lout  = huge(X,method="glasso",nlambda = nlams,lambda.min.ratio=0.01)
+	
+	return(lout)
 }
 
 
