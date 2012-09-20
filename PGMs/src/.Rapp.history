@@ -1,0 +1,410 @@
+201*201 / (71*71)
+library(MASS)
+fit <- lm(y~x1+x2+x3,data=mydata)
+data(mydata)
+mydata$y = 1:10
+mydata=c()
+mydata$y = 1:10
+mydata$x = 1:10
+mydata$x = rnorm(10)
+mydata$x1 = rnorm(10)
+mydata$x2 = rnorm(10)
+mydata$x3 = rnorm(10)
+dim(mydata)
+mydata
+fit <- lm(y~x1+x2+x3,data=mydata)
+fit
+step <- stepAIC(fit, direction="both")
+step
+step$anova
+source('utils.R')
+?huge
+source("/Volumes/Users/Shared/PapverXI/src/getGSE.R")
+gseID = 'GSE18383'
+tmpGEO = getGEO(GEO = gseID, GSEMatrix =T, AnnotGPL=F)
+str(tmpGEO)
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+image(gsim(20,10))
+image(t(gsim(20,10)))
+?perm
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+a = gsim(20,1)
+a = gsim(20,10)
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+a = gsim(20,10)
+a$rdata
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+a$rdata
+a = gsim(20,10)
+a$sdata
+a$rdata
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+a = gsim(20,10)
+a$pdata
+glap(a$pdata)
+?eigen
+G = a$pdata
+L = glap(G)
+L
+V =	eigen(L)
+V
+V$values
+dim(V$vectors)
+szero  = 1e-10
+which(V$values == min(V$values[V$values > szero]))
+order(	V$vectors[,findex])
+findex = which(V$values == min(V$values[V$values > szero]))
+order(	V$vectors[,findex])
+?order
+V$vectors[,findex]
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+n = 20;#
+	m = 10;#
+	simData = gsim(n,m)#
+	specOrder(simData$pData)
+n = 20;#
+	m = 10;#
+	simData = gsim(n,m)
+simData$pData
+n = 20;#
+	m = 10;#
+	simData = gsim(n,m)
+simData
+simData$pdata
+specOrder(simData$pdata)
+n = 20;#
+	m = 10;#
+	simData = gsim(n,m)#
+	image(t(simData$pdata))
+sorder  = specOrder(simData$pdata)
+image(t(simData$pdata[sorder,]))
+image(tsimData$rdata)
+image(t(simData$rdata))
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+n = 20;#
+	m = 10;#
+	simData = gsim(n,m)#
+	image(t(simData$pdata))#
+	sorder  = specOrder(simData$pdata)#
+	image(t(simData$pdata[sorder,]))#
+	image(t(simData$rdata))
+sorder
+image(t(simData$pdata[,sorder]))
+sorder  = specOrder(simData$pdata)
+image(t(simData$pdata[,sorder]))
+image(t(simData$pdata))
+image(t(simData$rdata))
+image(t(simData$pdata[,sorder]))
+n = 200;#
+	m = 100;#
+	simData = gsim(n,m)#
+	image(t(simData$pdata))#
+	sorder  = specOrder(simData$pdata)#
+	image(t(simData$pdata[,sorder]))#
+	image(t(simData$rdata))
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+n = 200;#
+	m = 100;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	par(mfrow=c(1,3))
+source("/Volumes/Users/Shared/PaperX/src/specOrder.R")
+n = 20;#
+	m = 100;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	par(mfrow=c(1,3))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[,sorder]))#
+	image(t(simData$rdata))
+par(mfrow=c(1,4))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[,sorder]))#
+	image(t(simData$rdata))#
+	heatmap(simData$pdata)
+simData$pdata
+heatmap(simData$pdata)
+image(t(simData$rdata))
+heatmap(simData$pdata)
+corder  = specOrder(t(simData$pdata))
+image(t(simData$pdata[corder,sorder]))
+heatmap(simData$pdata)
+?heatmap
+cm.colors
+cm.colors(2)
+heatmap(simData$pdata,col = cm.colors(2))
+heatmap(simData$pdata,col = cm.colors(3))
+heatmap(simData$pdata,col = cm.colors(4))
+heatmap(simData$pdata,col = cm.colors(5))
+heatmap(simData$pdata,col = cm.colors(3))
+unique(simData$pdata)
+heatmap
+library(gplots)
+heatmap.2(simData$pdata,trace = "none")
+image(t(simData$pdata[corder,sorder]))
+n = 20;#
+	m = 1000;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	corder  = specOrder(t(simData$pdata))#
+#
+	par(mfrow=c(1,4))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[corder,sorder]))#
+	image(t(simData$rdata))
+heatmap.2(simData$pdata,trace = "none")
+n = 20;#
+	m = 1000;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	corder  = specOrder(t(simData$pdata))
+par(mfrow=c(1,4))
+image(t(simData$pdata))
+image(t(simData$pdata[corder,sorder]))
+image(t(simData$rdata))
+image(t(simData$pdata[,sorder]))
+n = 20;#
+	m = 1000;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	corder  = specOrder(t(simData$pdata))#
+#
+	par(mfrow=c(1,4))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[,sorder]))#
+	image(t(simData$rdata))
+heatmap.2(simData$pdata,trace = "none")
+heatmap.2(simData$pdata,Rowv=F,trace = "none")
+image(t(simData$pdata[corder,sorder]))
+par(mfrow=c(1,4))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[corder,sorder]))#
+	image(t(simData$rdata))
+matrix(c(1,0,1,1,1,0,1,0,0,0,1,1,0,0,0),nrow =3)
+matrix(c(1,0,1,1,1,0,1,0,0,0,1,1,0,0,0),nrow =3,byrow=T)
+cbind(0,diag(1,nrow=3))
+b = cbind(matrix(0,nrow = 3,ncol=2),diag(1,nrow=3))
+b
+rbind(a,b)
+a
+b
+a = matrix(c(1,0,1,1,1,0,1,0,0,0,1,1,0,0,0),nrow =3,byrow=T)
+b = cbind(matrix(0,nrow = 3,ncol=2),diag(1,nrow=3))
+rbind(a,b)
+heatmap.2(dd,Rowv=F,trace = "none")
+dd = rbind(a,b)#
+	heatmap.2(dd,Rowv=F,trace = "none")
+heatmap.2(dd,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+ddd = permute(dd)
+ddd
+ddd = dd[,sample(1:ncol(dd),ncol(dd))]
+ddd
+dd[,sample(1:ncol(dd),ncol(dd))]
+heatmap.2(ddd,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+a = matrix(c(1,1,0,0,#
+1,0,1,0, #
+1,0,0,1,#
+1,0,0,0,))
+a = matrix(c(1,1,0,0,#
+1,0,1,0, #
+1,0,0,1,#
+1,0,0,0))
+a = matrix(c(1,1,0,0,#
+1,0,1,0, #
+1,0,0,1,#
+1,0,0,0,#
+0,1,1,0,#
+0,1,0,1,#
+0,1,0,0,#
+0,0,1,1,#
+0,0,1,0,#
+0,0,0,1#
+),nrow = 4,)
+a
+heatmap.2(a,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+sorder  = specOrder(a)
+image(t(a[,sorder]))
+sorder  = specOrder(a)#
+corder  = specOrder(t(a))#
+image(t(a[corder,sorder]))
+heatmap.2(a,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+b = c(10,10,2,30,2,3,1,15,1,6,5)
+length(b)
+dim(a)
+b = c(10,10,2,30,3,1,15,1,6,5)
+b = c(10,10,2,30,3,1,15,1,6,5)#
+aa =c()#
+#
+for(i in 1:ncol(a)){#
+	aa=cbin(aa,a[,rep(i,b[i])])#
+}
+b = c(10,10,2,30,3,1,15,1,6,5)#
+aa =c()#
+#
+for(i in 1:ncol(a)){#
+	aa=cbind(aa,a[,rep(i,b[i])])#
+}
+aa
+image(aa)
+image(t(aa))
+heatmap.2(aa,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+sorder  = specOrder(aa)#
+corder  = specOrder(t(aa))#
+image(t(a[corder,sorder]))
+image(t(aa[corder,sorder]))
+image(t(aa[,sorder]))
+image(t(aa[nrow(aa):1,sorder]))
+heatmap.2(aa,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+heatmap.2(aa,Rowv=F,trace = "none")
+image(t(aa[nrow(aa):1,]))
+a = matrix(c(1,1,0,#
+1,0,1,#
+1,0,0,#
+0,1,1,#
+0,1,0,#
+0,0,1),nrow = 3)
+a
+b = c(2,1,15,3,25,10)
+for(i in 1:ncol(a)){#
+	aa=cbind(aa,a[,rep(i,b[i])])#
+}
+a = matrix(c(1,1,0,#
+1,0,1,#
+1,0,0,#
+0,1,1,#
+0,1,0,#
+0,0,1),nrow = 3)#
+#
+b = c(2,1,15,3,25,10)#
+#
+for(i in 1:ncol(a)){#
+	aa=cbind(aa,a[,rep(i,b[i])])#
+}
+a = matrix(c(1,1,0,#
+1,0,1,#
+1,0,0,#
+0,1,1,#
+0,1,0,#
+0,0,1),nrow = 3)#
+#
+b = c(2,1,15,3,25,10)#
+aa =c()#
+#
+for(i in 1:ncol(a)){#
+	aa=cbind(aa,a[,rep(i,b[i])])#
+}
+col=colorpanel(3,"white","white","black")#
+heatmap.2(aa,Rowv=F,trace = "none")
+quartz()
+quartz()#
+col=colorpanel(3,"white","white","black")#
+heatmap.2(aa,Rowv=F,trace = "none")#
+quartz()#
+#
+sorder  = specOrder(aa)#
+corder  = specOrder(t(aa))#
+image(t(aa[nrow(aa):1,sorder]))#
+quartz()#
+#
+image(t(aa[nrow(aa):1,]))
+image(t(aa[nrow(aa):1,]),col=col)
+quartz()#
+sorder  = specOrder(aa)#
+corder  = specOrder(t(aa))#
+image(t(aa[nrow(aa):1,sorder]),col=col)#
+quartz()#
+#
+image(t(aa[nrow(aa):1,]),col=col)
+quartz()#
+col=colorpanel(3,"white","white","black")#
+heatmap.2(aa,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black")#
+)
+n = 20;#
+	m = 1000;#
+	simData = gsim(n,m)#
+	sorder  = specOrder(simData$pdata)#
+	corder  = specOrder(t(simData$pdata))#
+#
+	par(mfrow=c(1,4))#
+	image(t(simData$pdata))#
+	image(t(simData$pdata[corder,sorder]))#
+	image(t(simData$rdata))
+image(t(simData$pdata[,sorder]))
+heatmap.2(ddd,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black"))
+quartz()#
+col=colorpanel(3,"white","white","black")#
+heatmap.2(aa,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black")#
+)
+quartz()#
+sorder  = specOrder(aa)#
+corder  = specOrder(t(aa))#
+image(t(aa[nrow(aa):1,sorder]),col=col)
+a = matrix(c(1,1,0,#
+1,0,1,#
+1,0,0,#
+0,1,1,#
+0,1,0,#
+0,0,1),nrow = 3)#
+#
+b = c(2,1,15,3,25,10)#
+aa =c()#
+#
+for(i in 1:ncol(a)){#
+	aa=cbind(aa,a[,rep(i,b[i])])#
+}#
+#
+quartz()#
+col=colorpanel(3,"white","white","black")#
+heatmap.2(aa,Rowv=F,trace = "none",col=colorpanel(3,"white","white","black")#
+)#
+#
+quartz()#
+sorder  = specOrder(aa)#
+corder  = specOrder(t(aa))#
+image(t(aa[nrow(aa):1,sorder]),col=col)#
+quartz()#
+#
+image(t(aa[nrow(aa):1,]),col=col)
+simulation code. #
+source('llgm.R')#
+source('PGMfunctions.R')
+simulation code. #
+source('llgm.R')#
+source('PGMfunctions.R')
+library(huge)
+n = 200#
+p = 50#
+v = 0.1#
+u = 0.01#
+lambda = 0.3
+gdata = huge.generator(n,d = p, graph="scale-free",v=v,u=u)
+simData = Copula.Norm.Pois(gdata$data,lambda = lambda)
+names(simData)
+str(simData)
+image(simData)
+ranges(simData)
+range(simData)
+hist(simData)
+source('llgm.R')#
+source('PGMfunctions.R')#
+#
+library(huge)#
+#
+n = 200#
+p = 50#
+v = 0.1#
+u = 0.01#
+lambda = 0.3#
+#
+gdata = huge.generator(n,d = p, graph="scale-free",v=v,u=u)#
+#
+smatrix  = matrix(sample(c(1,-1), nrow(gdata$theta)*ncol(gdata$theta), replace =T), nrow = nrow(gdata$theta) )#
+#
+simData = WPGMSim(n,p,R = 10, alpha = rep(0,p), Theta = .2*as.matrix(gdata$theta)*smatrix, maxit = 100 )
+names(simData)
+dim(simData)
+hist(simData)
+hist(simData)
+image(simData)
+hist(simData)
+image(simData)
