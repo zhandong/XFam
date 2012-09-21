@@ -150,7 +150,9 @@ PGM.path.neighborhood = function(X,Y,nlams,lmax,startb=0)
 WPGM.path.neighborhood = function(X,Y,R,nlams,lmax,lmin=0.01,lams=NULL,startb=0)
 {
   n = nrow(X); p = ncol(X);
-  lams = exp(seq(log(lmax),log(lmin),l=nlams));
+  if(is.null(lams)){
+  	lams = exp(seq(log(lmax),log(lmin),l=nlams));
+  }
   
   if(nlams==1){lams = lmax};
   thr = 1e-8; maxit = 1e6;

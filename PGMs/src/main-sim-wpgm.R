@@ -32,7 +32,7 @@ gpath =c()
 # gpath[[4]]  = myglasso.select(t(huge.npn(simData)),nlams = 20)
 
 
-gpath[[1]] = WPGM.network(t(simData),lmin = 0.01, R=max(simData),parallel=T,ncores = 20,nlams = 20)
+gpath[[1]] = WPGM.network(t(simData),lmin = 0.001, R=max(simData),parallel=T,ncores = 20,nlams = 20)
 gpath[[2]] = LPGM.network(t(simData),lmin=0.01,nlams = 20, nCpus = 10, parallel=T)
 gpath[[3]]  = myglasso(t(simData),nlams=20)
 gpath[[4]]  = myglasso(t(huge.npn(simData)),nlams = 20)
@@ -52,7 +52,7 @@ save.image(file=paste(fname,".rdata",sep=""))
 }
 
 
-for( theta in seq(0.1,0.2,by=0.02)){
-	fooSim(n=200,p=50,theta = theta,graphType = "star");
-}
+# # for( theta in seq(0.1,0.2,by=0.02)){
+	# fooSim(n=200,p=50,theta = theta,graphType = "star");
+# }
 
