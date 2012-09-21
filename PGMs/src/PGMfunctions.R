@@ -1,7 +1,8 @@
 #################
 # Poisson Graphical Models functions
 
-
+require('huge')
+require('glmnet')
 
 ##########
 #PGM Gibbs Sampler - Besag's auto-model
@@ -146,10 +147,11 @@ PGM.path.neighborhood = function(X,Y,nlams,lmax,startb=0)
 #startb - optional starting values
 #Returns: alpha (intercept), beta (coefficient)
 
-WPGM.path.neighborhood = function(X,Y,R,nlams,lmax,startb=0)
+WPGM.path.neighborhood = function(X,Y,R,nlams,lmax,lmin=0.01,lams=NULL,startb=0)
 {
   n = nrow(X); p = ncol(X);
-  lams = exp(seq(log(lmax),log(.0001),l=nlams));
+  lams = exp(seq(log(lmax),log(lmin),l=nlams));
+  
   if(nlams==1){lams = lmax};
   thr = 1e-8; maxit = 1e6;
   Xt = cbind(t(t(rep(1,n))),X);
@@ -264,6 +266,29 @@ lambdaMax <-function(X){
 
 
 
+WPGM.max <-function(X,delta=0.01){
+	minlambda =0;
+	maxlambda = lambdaMax(t(X));
+	### binary search the interval
+	while(1){
+		mid = (minlambda+maxlambda)/2
+		tmp=WPGM.network(X,lams=mid)[[1]]
+		tmp[abs(tmp)<1e-06]=0
+		tmp[abs(tmp)>1e-06]=1
+		if(sum(tmp)>0){
+			minlambda = mid+delta
+		}else{
+			maxlambda = mid-delta
+		}			
+		
+		if(abs(maxlambda-minlambda)<delta){
+			return(mid);
+		}
+	}
+}
+
+
+
 ################
 #function to compute the poisson network
 # X is pxn matrix
@@ -274,7 +299,9 @@ WPGM.network = function(X,R,nlams,lmin=0.001,lams=NULL, parallel=T,ncores=4){
 	  	 lmax = lambdaMax(t(X))
 		 lams = exp(seq(log(lmax),log(lmin),l=nlams));	
 	  }
-	 
+	  if(nlams!= length(lams)){
+	  	 print("nlams is not equal to lams")
+	  }	 
 	  ghat = c()
 	  if(nlams>0){
 	  		ghat = array(0,dim=c(nrow(X),nrow(X),length(lams)))
@@ -283,7 +310,7 @@ WPGM.network = function(X,R,nlams,lmin=0.001,lams=NULL, parallel=T,ncores=4){
 			
 			#print(i)
 			
-			fit = WPGM.path.neighborhood(t(X[-i,]),X[i,],R,nlams,lmax,0)
+			fit = WPGM.path.neighborhood(t(X[-i,]),X[i,],R,nlams,lams=lams,0)
 			fit$beta=as.matrix(fit$Bmat)
 			if(i==1){
 				ghat[i,2:nrow(X),]=fit$beta
@@ -878,9 +905,8 @@ myglmnet.max <-function(X, link ="log",delta=0.01){
 			return(mid);
 		}
 	}
-	
-	
 }
+
 
 
 myglmnet.select2 <- function(X,method="star",link="log",N=100,beta=0.05, lambda.path=NULL, delta = 0.01,parallel=F,warmStart=T,nCpus=4){
