@@ -1840,8 +1840,14 @@ myglasso<- function(X,method="star",beta=0.05, nlams,N=100){
 }
 
 
-
-
+### X is a pxn matrix
+mymb.select <- function(X,method="star",beta=0.05, nlams,N=100){
+	X=t(X)	
+	lout  = huge(X,method="mb",nlambda = nlams,lambda.min.ratio=0.01)
+	lout.select = huge.select(lout,criterion="stars",stars.thresh= beta,rep.num = N)
+	
+	return(lout.select)
+}
 
 
 
