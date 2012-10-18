@@ -821,7 +821,18 @@ myglmnet.select <- function(X,method="star",link="log",N=100,beta=0.05, lambda.p
 		for(i in 1:N){
 				cat(paste("LLGM: Conducting sampling ... in progress: ", floor(100*(i/N)), "%", collapse=""),"\r")
 				flush.console()
-				index = sample(1:ncol(X),b,replace=F)
+				
+				# Make sure sample with no gene with all zero values
+				#index = sample(1:ncol(X),b,replace=F)
+				good <- 1
+				while(good){
+					index = sample(1:ncol(X),b,replace=F)
+					#if(sum(apply(X[,index], 1, sum)==0)==0){
+					if(sum(apply(X[,index], 1, function(x) length(unique(x))==1))==0){
+						good <- 0
+					}
+				}
+				
 				#tmp=glmpois(X[,index],lambda.path[j],parallel=parallel,warmStart=warmStart,nCpus=nCpus)
 				ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=parallel,nCpus=nCpus)
 				
@@ -867,7 +878,16 @@ myglmnet.select <- function(X,method="star",link="log",N=100,beta=0.05, lambda.p
 			flush.console()
 			D=matrix(0,nrow=nrow(X),ncol=nrow(X))
 			for(i in 1:N){
-				index = sample(1:ncol(X),b,replace=F)
+				# Make sure sample with no gene with all zero values
+				#index = sample(1:ncol(X),b,replace=F)
+				good <- 1
+				while(good){
+					index = sample(1:ncol(X),b,replace=F)
+					#if(sum(apply(X[,index], 1, sum)==0)==0){
+					if(sum(apply(X[,index], 1, function(x) length(unique(x))==1))==0){
+						good <- 0
+					}
+				}
 				tmp=glmpois(X[,index],lambda.path[j],parallel=F)
 				tmp[abs(tmp)<1e-06]=0
 				tmp[abs(tmp)>1e-06]=1
@@ -893,6 +913,7 @@ myglmnet.max <-function(X, link ="log",delta=0.01){
 	maxlambda = lambdaMax(t(X));
 	### binary search the interval
 	while(1){
+		#cat("wooi2.. ")
 		mid = (minlambda+maxlambda)/2
 		tmp=glmpois(X,mid)
 		tmp[abs(tmp)<1e-06]=0
@@ -1195,103 +1216,120 @@ glmpois <- function(X,lambda,parallel=F, nCpus = 4){
 	
 	if(length(lambda)>1){
 	
-	ghat = array(0,dim=c(nrow(X),nrow(X),length(lambda)))
+		ghat = array(0,dim=c(nrow(X),nrow(X),length(lambda)))
 	
-	if(parallel){
-#		library(snowfall)
-#		sfInit(parallel=T,cpus=nCpus)
-#		
-#		sfExport("X",local=T)
-#		sfExport("ghat",local=T)
-#		sfExport("lambda",local=T)
-#		sfLibrary(glmnet)
-		wrapper <- function(i){
-			fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
-			fit$beta=as.matrix(fit$beta)
-			if(ncol(fit$beta)<length(lambda)){
-				tmp = matrix(0,nrow = nrow(fit$beta),ncol = length(lambda))
-				tmp[,1:ncol(fit$beta)]=fit$beta
-				tmp[,ncol(fit$beta):length(lambda)] = fit$beta[,ncol(fit$beta)]
-				fit$beta = tmp
-			}
-			
-			if(i==1){
-				ghat[i,2:nrow(X),]=fit$beta
-			}else if(i==nrow(X)){
-				ghat[i,1:(nrow(X)-1),]=fit$beta
-
-			}else{
-				ghat[i,1:(i-1),]=fit$beta[1:(i-1),]
-				ghat[i,(i+1):nrow(X),]=fit$beta[i:nrow(fit$beta),]	
-			}
-			return(ghat[i,,])
-		}
-#		sfExport("wrapper")		
-#		ghat2=sfLapply(1:nrow(X),wrapper)	
-#		sfStop()
-		library(multicore)
-		ghat2=mclapply(1:nrow(X),wrapper)	
-		
-		
-		for(i in 1:nrow(X)){
-			ghat[i,,]=ghat2[[i]]
-		}
-		
-		return(ghat)
-
-	}
-	if(parallel==F)
-	{
-		wrapper <- function(i){
-			print(i)
-			fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
-			fit$beta=as.matrix(fit$beta)
-			if(ncol(fit$beta)<length(lambda)){
-				tmp = matrix(0,nrow = nrow(fit$beta),ncol = length(lambda))
-				tmp[,1:ncol(fit$beta)]=fit$beta
-				tmp[,ncol(fit$beta):length(lambda)] = fit$beta[,ncol(fit$beta)]
-				fit$beta = tmp
-			}
-			
-			if(i==1){
-				ghat[i,2:nrow(X),]=fit$beta
-			}else if(i==nrow(X)){
-				ghat[i,1:(nrow(X)-1),]=fit$beta
-
-			}else{
-				ghat[i,1:(i-1),]=fit$beta[1:(i-1),]
-				ghat[i,(i+1):nrow(X),]=fit$beta[i:nrow(fit$beta),]	
-			}
-			return(ghat[i,,])
-		}
-		ghat2=lapply(1:nrow(X),wrapper)	
-		for(i in 1:nrow(X)){
-			ghat[i,,]=ghat2[[i]]
-		}
-		return(ghat)
-
-	}
-	
-	
-	
-	
-	
-	}
-	
-	
-	
-	if(length(lambda ==1)){
-		
-		ghat=matrix(0,nrow=nrow(X),ncol=nrow(X))
 		if(parallel){
-		library(snowfall)
-		sfInit(cpus=nCpus)
+	#		library(snowfall)
+	#		sfInit(parallel=T,cpus=nCpus)
+	#		
+	#		sfExport("X",local=T)
+	#		sfExport("ghat",local=T)
+	#		sfExport("lambda",local=T)
+	#		sfLibrary(glmnet)
+			wrapper <- function(i){
+				fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
+				fit$beta=as.matrix(fit$beta)
+				if(ncol(fit$beta)<length(lambda)){
+					tmp = matrix(0,nrow = nrow(fit$beta),ncol = length(lambda))
+					tmp[,1:ncol(fit$beta)]=fit$beta
+					tmp[,ncol(fit$beta):length(lambda)] = fit$beta[,ncol(fit$beta)]
+					fit$beta = tmp
+				}
+				
+				if(i==1){
+					ghat[i,2:nrow(X),]=fit$beta
+				}else if(i==nrow(X)){
+					ghat[i,1:(nrow(X)-1),]=fit$beta
+
+				}else{
+					ghat[i,1:(i-1),]=fit$beta[1:(i-1),]
+					ghat[i,(i+1):nrow(X),]=fit$beta[i:nrow(fit$beta),]	
+				}
+				return(ghat[i,,])
+			}
+	#		sfExport("wrapper")		
+	#		ghat2=sfLapply(1:nrow(X),wrapper)	
+	#		sfStop()
+			library(multicore)
+			ghat2=mclapply(1:nrow(X),wrapper)	
+			
+			
+			for(i in 1:nrow(X)){
+				ghat[i,,]=ghat2[[i]]
+			}
+			
+			return(ghat)
+
+		}
+	
+		if(parallel==F)
+		{
+			wrapper <- function(i){
+				print(i)
+				fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
+				fit$beta=as.matrix(fit$beta)
+				if(ncol(fit$beta)<length(lambda)){
+					tmp = matrix(0,nrow = nrow(fit$beta),ncol = length(lambda))
+					tmp[,1:ncol(fit$beta)]=fit$beta
+					tmp[,ncol(fit$beta):length(lambda)] = fit$beta[,ncol(fit$beta)]
+					fit$beta = tmp
+				}
+				
+				if(i==1){
+					ghat[i,2:nrow(X),]=fit$beta
+				}else if(i==nrow(X)){
+					ghat[i,1:(nrow(X)-1),]=fit$beta
+
+				}else{
+					ghat[i,1:(i-1),]=fit$beta[1:(i-1),]
+					ghat[i,(i+1):nrow(X),]=fit$beta[i:nrow(fit$beta),]	
+				}
+				return(ghat[i,,])
+			}
+			ghat2=lapply(1:nrow(X),wrapper)	
+			for(i in 1:nrow(X)){
+				ghat[i,,]=ghat2[[i]]
+			}
+			return(ghat)
+
+		}
+	}
+	
+	# wooi: this this is mistake:
+	#if(length(lambda ==1)){
+	if(length(lambda) ==1){		
+		ghat=matrix(0,nrow=nrow(X),ncol=nrow(X))
 		
-		sfExport("X",local=T)
-		sfExport("ghat",local=T)
-		sfLibrary(glmnet)
+		if(parallel){
+			library(snowfall)
+			sfInit(cpus=nCpus)
+			
+			sfExport("X",local=T)
+			sfExport("ghat",local=T)
+			sfLibrary(glmnet)
 		#modify ghat
-		wrapper <- function(i){
+			wrapper <- function(i){
+				fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
+				fit$beta=as.numeric(fit$beta)
+				if(i==1){
+					ghat[i,2:nrow(X)]=fit$beta
+				}else if(i==nrow(X)){
+					ghat[i,1:(nrow(X)-1)]=fit$beta
+
+				}else{
+					ghat[i,1:(i-1)]=fit$beta[1:(i-1)]
+					ghat[i,(i+1):nrow(X)]=c(fit$beta[i:length(fit$beta)])	
+				}
+				return(ghat[i,])
+			}
+			sfExport("wrapper")
+			ghat=sfSapply(1:nrow(X),wrapper)	
+			sfStop()
+			return(ghat)
+		}
+		
+# wooi question: should run this again if parallel==F?
+		for(i in 1:nrow(X)){
 			fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
 			fit$beta=as.numeric(fit$beta)
 			if(i==1){
@@ -1303,39 +1341,14 @@ glmpois <- function(X,lambda,parallel=F, nCpus = 4){
 				ghat[i,1:(i-1)]=fit$beta[1:(i-1)]
 				ghat[i,(i+1):nrow(X)]=c(fit$beta[i:length(fit$beta)])	
 			}
-			return(ghat[i,])
+				
 		}
-		sfExport("wrapper")
-		ghat=sfSapply(1:nrow(X),wrapper)	
-		sfStop()
 		return(ghat)
 	}
-	
-	
-	for(i in 1:nrow(X)){
-	fit=glmnet(t(X[-i,]),X[i,],family="poisson",lambda= lambda)
-	fit$beta=as.numeric(fit$beta)
-	if(i==1){
-		ghat[i,2:nrow(X)]=fit$beta
-	}else if(i==nrow(X)){
-		ghat[i,1:(nrow(X)-1)]=fit$beta
-
-	}else{
-		ghat[i,1:(i-1)]=fit$beta[1:(i-1)]
-		ghat[i,(i+1):nrow(X)]=c(fit$beta[i:length(fit$beta)])	
-		}
-		
-	}
-	return(ghat)
-	}
-	
-
 }
 
 
-
-
-
+# ---
 my.huge.mb<-function (x, lambda = NULL, nlambda = NULL, lambda.min.ratio = NULL, 
     scr = NULL, scr.num = NULL, idx.mat = NULL, sym = "or", verbose = TRUE,link=NULL) 
 {
@@ -1523,15 +1536,15 @@ figroc<-function(fname ="default.pdf",...){
 
 figroc_sum<-function(epic = 10, add=F, ...){
 
-roc.sum=lapply(1:epic,figroc)
-tmp=0
+	roc.sum=lapply(1:epic,figroc)
+	tmp=0
 
-for(i in 1:length(roc.sum)){
-	
-	tmp=roc.sum[[i]]+tmp
-	
-}
-tmp = tmp / length(roc.sum)
+	for(i in 1:length(roc.sum)){
+		
+		tmp=roc.sum[[i]]+tmp
+		
+	}
+	tmp = tmp / length(roc.sum)
 
 	par(lwd = 2)
 	if(!add){
@@ -1728,7 +1741,6 @@ LPGM.network <-function(X,lmin = 0.01,lambda.path=NULL, nlams =20,parallel =T, n
 	return(ghat)
 }
 
-
 LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01, nlams=20, lambda.path=NULL ,parallel=T,nCpus=4){
 	
 	if(is.null(lambda.path) ){
@@ -1812,6 +1824,151 @@ LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01,
 		ghat$lambda.path = lambda.path
 		ghat$opt.lambda = lambda.path[which(v==max(v[v<beta]))]	
 		ghat$network = glmpois(X,lambda=lambda.path,parallel=F,nCpus=nCpus)
+		ghat$network =lapply(1:nlams,function(r){return(ghat$network[,,r])})
+		ghat$opt.index = which(v==max(v[v<beta]))
+
+		return(ghat)
+	}
+		
+}
+
+wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01, nlams=20, lambda.path=NULL ,parallel=T,nCpus=4){
+	
+	if(is.null(lambda.path) ){
+		lmax = myglmnet.max(X)
+ 		lambda.path = exp(seq(log(lmax),log(lmin),l=nlams));
+	}
+
+	
+	if(method=="star" & link=="log" & parallel == T){
+		b = min(c(10*sqrt(ncol(X)), 0.8*ncol(X))) 
+		ghat=list()
+		ghat.path=list()
+		ghat.path$path=vector("list",length(lambda.path))
+		v=c()
+
+		for(i in 1:N){
+			cat(paste("LPGM: Conducting sampling ... in progress: ", floor(100*(i/N)), "%", collapse=""),"\r")
+			flush.console()
+			
+			glmpois.good <- 1
+			
+			while(glmpois.good){
+				# Make sure sample with no gene with all zero values
+				#index = sample(1:ncol(X),b,replace=F)
+				good <- 1
+				while(good){
+					index = sample(1:ncol(X),b,replace=F)
+					#if(sum(apply(X[,index], 1, sum)==0)==0){
+					if(sum(apply(X[,index], 1, function(x) length(unique(x))==1))==0){
+						good <- 0
+					}
+				}
+				
+				tryCatch(
+						{
+							#tmp=glmpois(X[,index],lambda.path[j],parallel=parallel,warmStart=warmStart,nCpus=nCpus)
+							#ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=parallel,nCpus=nCpus)
+							ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=parallel,nCpus=nCpus)
+							
+							glmpois.good <- 0
+						},
+						error = function(e) {
+							cat("glmnet returns empty model. Try again.")
+						}
+				)
+			}
+			
+			for(j in 1:length(lambda.path)){
+				tmp=ghat.path$raw[,,j]
+				tmp[abs(tmp)<1e-06]=0
+				tmp[abs(tmp)>1e-06]=1
+				diag(tmp)=0
+				if(is.null(ghat.path$path[[j]])){
+					ghat.path$path[[j]]=tmp;
+				}else{
+					ghat.path$path[[j]]=ghat.path$path[[j]]+tmp	
+				}
+					
+			}
+		}
+		
+		for(i in 1:length(lambda.path)){
+			D=ghat.path$path[[i]]
+			D=D/N
+			D=2*D*(1-D)
+			v=c(v,mean(D[upper.tri(D)]))	
+		}
+		
+		v=cummax(v)
+		ghat$v=v
+		ghat$lambda.path = lambda.path
+		ghat$opt.lambda = lambda.path[which(v==max(v[v<beta]))]	
+			
+		ghat$network = glmpois(X,lambda=lambda.path,parallel=T,nCpus=nCpus)
+		ghat$network =lapply(1:nlams,function(r){return(ghat$network[,,r])})
+		ghat$opt.index = which(v==max(v[v<beta]))
+
+		return(ghat)
+	}
+	
+	
+	if(method=="star" & link=="log" & parallel == F){
+		b = min(c(10*sqrt(ncol(X)), 0.8*ncol(X))) 
+		ghat=list()
+		v=c()
+		
+		for( j in 1:length(lambda.path)){
+		#for( j in 1:3){
+			cat(paste("Conducting sampling ... in progress: ", floor(100*(j/length(lambda.path))), "%", collapse=""),"\r")
+			flush.console()
+			D=matrix(0,nrow=nrow(X),ncol=nrow(X))
+
+			for(i in 1:N){
+			#for(i in 1:10){
+				glmpois.good <- 1
+				
+				while(glmpois.good){
+					# Make sure sample with no gene with all zero values
+					#index = sample(1:ncol(X),b,replace=F)
+					good <- 1
+					while(good){
+						index = sample(1:ncol(X),b,replace=F)
+						#if(sum(apply(X[,index], 1, sum)==0)==0){
+						if(sum(apply(X[,index], 1, function(x) length(unique(x))==1))==0){
+							good <- 0
+						}
+					}
+					
+					tryCatch(
+						{
+							tmp=glmpois(X[,index],lambda.path[j],parallel=parallel)
+							#tmp=glmpois(X[,-k],lambda.path[j],parallel=T)
+							glmpois.good <- 0
+						},
+						error = function(e) {
+							cat("glmnet returns empty model. Try again.")
+						}
+					)
+				} 
+				
+				tmp[abs(tmp)<1e-06]=0
+				tmp[abs(tmp)>1e-06]=1
+				D=D+tmp
+			}
+			
+
+			D=D/N
+			D=2*D*(1-D)
+			v=c(v,mean(D[upper.tri(D)]))			
+		}
+		
+		v=cummax(v)
+		ghat$v=v
+		ghat$lambda.path = lambda.path
+		ghat$opt.lambda = lambda.path[which(v==max(v[v<beta]))]	
+		#ghat$network = glmpois(X,lambda=lambda.path,parallel=F,nCpus=nCpus)
+		ghat$network = glmpois(X,lambda=lambda.path,parallel=parallel,nCpus=nCpus)
 		ghat$network =lapply(1:nlams,function(r){return(ghat$network[,,r])})
 		ghat$opt.index = which(v==max(v[v<beta]))
 
