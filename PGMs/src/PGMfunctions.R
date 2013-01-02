@@ -1832,6 +1832,8 @@ LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01,
 		
 }
 
+#
+#
 wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 0.01, nlams=20, lambda.path=NULL ,parallel=T,nCpus=4){
 	
 	if(is.null(lambda.path) ){
@@ -1869,7 +1871,7 @@ wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 
 						{
 							#tmp=glmpois(X[,index],lambda.path[j],parallel=parallel,warmStart=warmStart,nCpus=nCpus)
 							#ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=parallel,nCpus=nCpus)
-							ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=parallel,nCpus=nCpus)
+							ghat.path$raw= glmpois(X[,index],lambda=lambda.path,parallel=T,nCpus=nCpus)
 							
 							glmpois.good <- 0
 						},
@@ -1920,12 +1922,14 @@ wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 
 		
 		for( j in 1:length(lambda.path)){
 		#for( j in 1:3){
+			cat ("j=", j, " \t")
 			cat(paste("Conducting sampling ... in progress: ", floor(100*(j/length(lambda.path))), "%", collapse=""),"\r")
 			flush.console()
 			D=matrix(0,nrow=nrow(X),ncol=nrow(X))
 
 			for(i in 1:N){
 			#for(i in 1:10){
+				cat("\n i=", i, "\t")
 				glmpois.good <- 1
 				
 				while(glmpois.good){
@@ -1933,6 +1937,7 @@ wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 
 					#index = sample(1:ncol(X),b,replace=F)
 					good <- 1
 					while(good){
+						cat("~")
 						index = sample(1:ncol(X),b,replace=F)
 						#if(sum(apply(X[,index], 1, sum)==0)==0){
 						if(sum(apply(X[,index], 1, function(x) length(unique(x))==1))==0){
@@ -1942,12 +1947,12 @@ wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 
 					
 					tryCatch(
 						{
-							tmp=glmpois(X[,index],lambda.path[j],parallel=parallel)
+							tmp=glmpois(X[,index],lambda.path[j],parallel=F)
 							#tmp=glmpois(X[,-k],lambda.path[j],parallel=T)
 							glmpois.good <- 0
 						},
 						error = function(e) {
-							cat("glmnet returns empty model. Try again.")
+							cat("glmnet returns empty model. Try again.\n")
 						}
 					)
 				} 
@@ -1976,9 +1981,10 @@ wooi.LPGM.select <- function(X,method="star",link="log",N=100,beta=0.05, lmin = 
 	}
 		
 }
+#
 
-
-
+#
+#
 ### X is a pxn matrix
 myglasso.select <- function(X,method="star",beta=0.05, nlams,N=100){
 	X=t(X)	
