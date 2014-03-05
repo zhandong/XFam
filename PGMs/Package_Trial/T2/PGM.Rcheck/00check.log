@@ -1,0 +1,137 @@
+* using log directory ‘/nfs/nfs_wooi/Markov/Package_GMs/T2/PGM.Rcheck’
+* using R version 2.15.0 (2012-03-30)
+* using platform: x86_64-pc-linux-gnu (64-bit)
+* using session charset: UTF-8
+* checking for file ‘PGM/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘PGM’ version ‘0.1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking whether package ‘PGM’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Non-standard license specification:
+  GPL2.0
+Standardizable: TRUE
+Standardized license specification:
+  GPL-2
+* checking top-level files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking for unstated dependencies in R code ... WARNING
+‘library’ or ‘require’ calls not declared from:
+  ‘glmnet’ ‘huge’ ‘multicore’ ‘snowfall’
+See the information on DESCRIPTION files in the chapter ‘Creating R
+packages’ of the ‘Writing R Extensions’ manual.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+WPGM.network: no visible global function definition for ‘mclapply’
+glmpois : wrapper: no visible global function definition for ‘glmnet’
+glmpois: no visible global function definition for ‘mclapply’
+glmpois: no visible global function definition for ‘sfInit’
+glmpois: no visible global function definition for ‘sfExport’
+glmpois: no visible global function definition for ‘sfLibrary’
+glmpois: no visible binding for global variable ‘glmnet’
+glmpois: no visible global function definition for ‘sfSapply’
+glmpois: no visible global function definition for ‘sfStop’
+glmpois: no visible global function definition for ‘glmnet’
+* checking Rd files ... WARNING
+prepare_Rd: Bsublin.Rd:32-34: Dropping empty section \note
+prepare_Rd: Bsublin.Rd:29-31: Dropping empty section \author
+prepare_Rd: Bsublin.Rd:26-28: Dropping empty section \references
+prepare_Rd: Bsublin.Rd:38-40: Dropping empty section \seealso
+prepare_Rd: Copula.Norm.Pois.Rd:5-7: Dropping empty section \description
+prepare_Rd: Copula.Norm.Pois.Rd:16-18: Dropping empty section \details
+prepare_Rd: Copula.Norm.Pois.Rd:28-30: Dropping empty section \note
+prepare_Rd: Copula.Norm.Pois.Rd:25-27: Dropping empty section \author
+prepare_Rd: Copula.Norm.Pois.Rd:22-24: Dropping empty section \references
+prepare_Rd: Copula.Norm.Pois.Rd:34-36: Dropping empty section \seealso
+checkRd: (5) Copula.Norm.Pois.Rd:0-69: Must have a \description
+Error : LPGM.select.Rd: non-ASCII input and no declared encoding
+
+Error : PGM-package.Rd: non-ASCII input and no declared encoding
+
+Error : SPGM.select.Rd: non-ASCII input and no declared encoding
+
+Error : TPGM.select.Rd: non-ASCII input and no declared encoding
+
+prepare_Rd: WPGM.neighborhood.Rd:17-19: Dropping empty section \details
+prepare_Rd: WPGM.neighborhood.Rd:31-33: Dropping empty section \note
+prepare_Rd: WPGM.neighborhood.Rd:28-30: Dropping empty section \author
+prepare_Rd: WPGM.neighborhood.Rd:25-27: Dropping empty section \references
+prepare_Rd: WPGM.neighborhood.Rd:37-39: Dropping empty section \seealso
+prepare_Rd: WPGM.network.Rd:18-20: Dropping empty section \details
+prepare_Rd: WPGM.network.Rd:30-32: Dropping empty section \note
+prepare_Rd: WPGM.network.Rd:27-29: Dropping empty section \author
+prepare_Rd: WPGM.network.Rd:24-26: Dropping empty section \references
+prepare_Rd: WPGM.path.neighborhood.Rd:19-21: Dropping empty section \details
+prepare_Rd: WPGM.path.neighborhood.Rd:34-36: Dropping empty section \note
+prepare_Rd: WPGM.path.neighborhood.Rd:31-33: Dropping empty section \author
+prepare_Rd: WPGM.path.neighborhood.Rd:28-30: Dropping empty section \references
+prepare_Rd: WPGM.path.neighborhood.Rd:40-42: Dropping empty section \seealso
+Error : WPGM.select.Rd: non-ASCII input and no declared encoding
+
+prepare_Rd: WPGMSim.Rd:18-20: Dropping empty section \details
+prepare_Rd: WPGMSim.Rd:30-32: Dropping empty section \note
+prepare_Rd: WPGMSim.Rd:27-29: Dropping empty section \author
+prepare_Rd: WPGMSim.Rd:24-26: Dropping empty section \references
+prepare_Rd: WPGMSim.Rd:36-38: Dropping empty section \seealso
+prepare_Rd: glmpois.Rd:16-18: Dropping empty section \details
+prepare_Rd: glmpois.Rd:30-32: Dropping empty section \note
+prepare_Rd: glmpois.Rd:27-29: Dropping empty section \author
+prepare_Rd: glmpois.Rd:24-26: Dropping empty section \references
+prepare_Rd: lambdaMax.Rd:20-22: Dropping empty section \note
+prepare_Rd: lambdaMax.Rd:17-19: Dropping empty section \author
+prepare_Rd: lambdaMax.Rd:14-16: Dropping empty section \references
+prepare_Rd: lambdaMax.Rd:26-28: Dropping empty section \seealso
+prepare_Rd: myglmnet.max.Rd:15-17: Dropping empty section \details
+prepare_Rd: myglmnet.max.Rd:27-29: Dropping empty section \note
+prepare_Rd: myglmnet.max.Rd:24-26: Dropping empty section \author
+prepare_Rd: myglmnet.max.Rd:21-23: Dropping empty section \references
+problems found in ‘LPGM.select.Rd’, ‘PGM-package.Rd’, ‘SPGM.select.Rd’, ‘TPGM.select.Rd’, ‘WPGM.select.Rd’
+* checking Rd metadata ... OK
+* checking Rd cross-references ... WARNING
+Unknown package(s) ‘<pkg>’ in Rd xrefs
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘wpgmGrad’ ‘wpgmObj’
+All user-level objects in a package should have documentation entries.
+See the chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Codoc mismatches from documentation object 'myglmnet.max':
+myglmnet.max
+  Code: function(X, link = "log", delta = 0.01)
+  Docs: function(X, delta = 0.01)
+  Argument names in code not in docs:
+    link
+  Mismatches in argument names:
+    Position: 2 Code: link Docs: delta
+
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... WARNING
+‘library’ or ‘require’ calls not declared from:
+  ‘glmnet’ ‘huge’ ‘multicore’ ‘snowfall’
+* checking examples ... OK
+* checking PDF version of manual ... OK
+WARNING: There were 6 warnings.
+NOTE: There were 2 notes.
+See
+  ‘/nfs/nfs_wooi/Markov/Package_GMs/T2/PGM.Rcheck/00check.log’
+for details.

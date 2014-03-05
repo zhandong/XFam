@@ -1,0 +1,19 @@
+Bsublin                 Sublinear function
+Copula.Norm.Pois        Copula transform a matrix from normal to
+                        Poisson
+LPGM.select             Log-Linear Graphical Model based on Pair-wise
+                        Poisson Markov Network
+PGM-package             Poisson Graphical Models
+SPGM.select             Log-Linear Graphical Model based on Pair-wise
+                        Sub-linear truncated Poisson Markov Network
+TPGM.select             Log-Linear Graphical Model based on Pair-wise
+                        truncated Poisson Markov Network
+WPGM.neighborhood       WPGM neighborhood
+WPGM.network            Poisson network
+WPGM.path.neighborhood
+                        WPGM neighborhood over a regularization path
+WPGM.select             Winsorized Poisson Graphical Model (WPGM)
+WPGMSim                 Winsorized PGM Gibbs Simulator
+glmpois                 Poisson based neighborhood selection
+lambdaMax               Maximum lambda
+myglmnet.max            Maximum lambda from binary search

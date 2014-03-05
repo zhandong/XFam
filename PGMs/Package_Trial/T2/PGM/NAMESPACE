@@ -1,0 +1,5 @@
+#exportPattern("^[[:alpha:]]+")
+export(Bsublin, Copula.Norm.Pois, glmpois, lambdaMax, myglmnet.max,
+		LPGM.select, SPGM.select, TPGM.select, 
+		WPGM.select, WPGM.network, WPGM.path.neighborhood, WPGMSim, wpgmGrad, wpgmObj)
+
