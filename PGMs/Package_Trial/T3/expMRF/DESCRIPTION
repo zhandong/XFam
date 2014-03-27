@@ -1,0 +1,11 @@
+Package: expMRF
+Type: Package
+Title: Markov Random Field for Exponential Family
+Version: 1.0
+Date: 2014-03-25
+Author: Ying-Wooi Wan, Zhandong Liu
+Maintainer: Ying-Wooi Wan <yingwoow@bcm.edu>
+Deoends: glmnet, igraph, huge
+Description: This package contains methods to employ Markov Random Field (MRF) for exponential family.
+License: GPL2.0
+LazyLoad: yes
